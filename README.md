@@ -14,5 +14,9 @@
 - [Homography for one-step metric rectification](https://www.cs.cmu.edu/afs/andrew/course/16/822/www/projects/cberger2/proj1/)
 - [Systematic Transfer Error](https://youtu.be/v3322cNhCTk?si=uDrglnZkmnYbU9OR&t=355)
 - [RANSAC robust estimation](https://youtu.be/v3322cNhCTk?si=nffcUT6aCBkEAteA&t=2479)
-
-
+### Lab 2
+**TO BE UPDATED**
+### Lab 3
+**TO BE UPDATED**
+### Lab 4
+**TO BE UPDATED**
