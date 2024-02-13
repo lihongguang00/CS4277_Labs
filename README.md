@@ -1,4 +1,4 @@
-# Lab Submissions for CS4277 (AY23/24 Sem 2) 
+# Lab Submissions for CS4277/CS5477 (AY23/24 Sem 2) 
 - [X] Lab 1
 - [ ] Lab 2
 - [ ] Lab 3
