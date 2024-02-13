@@ -1,10 +1,10 @@
 # Lab Submissions for CS4277/CS5477 (AY23/24 Sem 2) 
+
+This repository includes the files (code & report) submitted for my CS4277 labs. The question and data sets are omitted to respect the intellectual property of the module coordinator(s), though they can be found in other repositories.
 - [X] Lab 1
 - [ ] Lab 2
 - [ ] Lab 3
 - [ ] Lab 4
-
-**Note:** Question & data sets not included (They can be found in other repositories)
 
 ## Helpful References
 ### Lab 1
