@@ -3,7 +3,7 @@
 This repository includes the files (code & report) submitted for my CS4277 labs. The question and data sets are omitted to respect the intellectual property of the module coordinator(s), though they can be found in other repositories. Additionally, helpful references for the labs are included in the last section. 
 ## Uploaded Labs (As of 13Feb2024)
 - [X] Lab 1
-- [ ] Lab 2
+- [X] Lab 2 (Currently Doing)
 - [ ] Lab 3
 - [ ] Lab 4
 ## Helpful References
