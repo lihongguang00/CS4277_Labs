@@ -1,9 +1,9 @@
 """ CS4277/CS5477 Lab 2: Affine 3D measurement from vanishing line and point.
 See accompanying file (lab2.pdf) for instructions.
 
-Name: <Your Name here>
-Email: <username>@u.nus.edu
-Student ID: A0123456X
+Name: Li Hongguang
+Email: e0725309@u.nus.edu
+Student ID: A0233309L
 """
 
 import os
@@ -47,7 +47,16 @@ def detect_lines(image: np.ndarray) -> np.ndarray:
         2. Pass the edge image from Canny edge detection to cv2.HoughLinesP with rho=1, theta=np.pi/180, threshold=100,
             minLineLength=MIN_LINE_LENGTH and maxLineGap=MAX_LINE_GAP.
     """
+    # Canny edge detection
+    edges = cv2.Canny(image, threshold1=MIN_CANNY_THRESHOLD, threshold2=MAX_CANNY_THRESHOLD, apertureSize=3)
 
+    # Display result from edge detection
+    # plt.imshow(edges, cmap='gray')
+    # plt.show()
+
+    # Hough line detection
+    lines = cv2.HoughLinesP(edges, rho=1, theta=np.pi/180, threshold=100, minLineLength=MIN_LINE_LENGTH, maxLineGap=MAX_LINE_GAP)
+    line_pts = lines
     """ END YOUR CODE HERE """
     line_pts = line_pts.reshape(-1, 4)
     return line_pts
@@ -106,7 +115,21 @@ def get_pairwise_intersections(lines: np.ndarray) -> np.ndarray:
     num_lines = lines.shape[0]
     intersections = np.empty(shape=[num_lines**2, 3], dtype=lines.dtype)
     """ YOUR CODE HERE """
+    coordinates = []
+    # Generate unique pair-wise intersection coordinates
+    for i in range(num_lines):
+        for j in range(i, num_lines):
+            coordinates.append(np.cross(lines[i], lines[j]))
 
+    # Cast list into np array
+    intersections = np.array(coordinates)
+
+    # Remove non-existent intersections
+    intersections = intersections[intersections[:, 2] != 0]
+
+    # Scale homogeneous coordiantes such that z=1
+    for i in range(3):
+        intersections[:, i] = intersections[:, i] / intersections[:, 2]
     """ END YOUR CODE HERE """
     return intersections
 
@@ -131,7 +154,21 @@ def get_support_mtx(intersections: np.ndarray, lines: np.ndarray, distance_thres
         1. Compute the I x L distance matrix distance_mtx between lines and intersections.
         2. Set the support matrix [i, j] to 1 if the distance_mtx[i,j] is below the distance threshold.
     """
+    for i in range(num_intersections):
+        for j in range(num_lines):
+            # Set z coordinate to 1
+            lines[j] = lines[j] / lines[j][2]
+            intersections[i] = intersections[i] / intersections[i][2]
 
+            # Calculate distance
+            distance = abs(np.dot(lines[j], intersections[i]) / np.sqrt(lines[j][0]**2 + lines[j][1]**2))
+            if (distance < distance_threshold):
+                distance = 1
+            else:
+                distance = 0
+
+            # Set matrix[i, j] = 1 if distance if point i is close enough to line j, else set to 0
+            support_mtx[i,j] = distance
     """ END YOUR CODE HERE """
     support_mtx = support_mtx.astype(int)
     assert support_mtx.shape == (num_intersections, num_lines)
@@ -160,7 +197,13 @@ def get_vanishing_pts(lines: np.ndarray, num_vanishing_pts: int) -> np.ndarray:
         - Find the next vanishing points with the remaining lines (use a loop for this). 
         - Note: you don't have to recompute the support_mtx. You can set some entries to 0 to "remove" it.
     """
-
+    for i in range(num_vanishing_pts):
+        support = np.sum(support_mtx, axis=1)
+        max_id = np.argmax(support)
+        vanishing_pts.append(intersections[max_id])
+        for j in range(len(support_mtx[max_id])):
+            if support_mtx[max_id, j] == 1:
+                support_mtx[:, j] = 0
     """ END YOUR CODE HERE """
     vanishing_pts = np.array(vanishing_pts)
     return vanishing_pts
@@ -193,7 +236,11 @@ def get_vanishing_line(vanishing_pts: np.ndarray):
     assert vanishing_pts.shape == (2, 3)
     vanishing_line = np.empty(shape=3, dtype=vanishing_pts.dtype)
     """ YOUR CODE HERE """
+    # Compute vanishing line with cross product
+    unnormalized_v_line = np.cross(vanishing_pts[0], vanishing_pts[1])
 
+    # Normalize coordinates of vanishing line such that z = 1
+    vanishing_line = unnormalized_v_line / unnormalized_v_line[2]
     """ END YOUR CODE HERE """
     assert len(vanishing_line) == 3
     return vanishing_line
@@ -248,7 +295,33 @@ def get_target_height(vanishing_line: np.ndarray, query_info: dict, target_info:
         4. distance ratio
         5. target height from distance ratio
     """
+    # Compute vanishing point u and normalize it
+    u = np.cross(np.cross(pt_b1, pt_b2), vanishing_line)
+    u = u / u[2]
 
+    # Compute l2 and normalize it
+    l2 = np.cross(pt_b2, pt_t2)
+    l2 = l2 / l2[2]
+
+    # Compute transferred point t1_tilda and normalize it
+    t1_tilda = np.cross(np.cross(pt_t1, u), l2)
+    t1_tilda = t1_tilda / t1_tilda[2]
+
+    # Compute v and normalize it
+    v = np.cross(np.cross(pt_b1, pt_t1), l2)
+    v = v / v[2]
+
+    # Compute distances from b2
+    b2_dist = 0
+    t1_tilda_dist = np.sqrt(np.sum((t1_tilda[:2] - pt_b2[:2]) ** 2))
+    t2_dist = np.sqrt(np.sum((pt_t2[:2] - pt_b2[:2]) ** 2))
+    v_dist = np.sqrt(np.sum((v[:2] - pt_b2[:2]) ** 2))
+
+    # Compute distance ratio
+    ratio = (t1_tilda_dist * (v_dist - t2_dist)) / (t2_dist * (v_dist - t1_tilda_dist))
+
+    # Get target height
+    target_height = (1 / ratio) * query_d1
     """ END YOUR CODE HERE """
     return target_height
 
