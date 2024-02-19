@@ -6,6 +6,7 @@ This repository includes the files (code & report) submitted for my CS4277 labs.
 - [X] Lab 2
 - [ ] Lab 3
 - [ ] Lab 4
+
 **Note:** As of 19Feb2024, I will only publish my lab report prior to the deadline (source code will be uploaded after deadline) to prevent potential plagiarism cases. Nonetheless, I will still upload helpful resources to help other students who are currently taking the module, and you may reference my pseudocode in the lab reports.
 ## Helpful References
 ### Lab 1
