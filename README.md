@@ -4,8 +4,8 @@ This repository includes the files (code & report) submitted for my CS4277 labs.
 ## Uploaded Labs (As of 3Apr2024)
 - [X] Lab 1
 - [X] Lab 2
-- [X] Lab 3 (Report Only)
-- [ ] Lab 4
+- [X] Lab 3
+- [X] Lab 4
 
 ## Helpful References
 ### Lab 1
@@ -27,4 +27,5 @@ This repository includes the files (code & report) submitted for my CS4277 labs.
 - [Converting rotation vector recovered from PnP solving to rotation matrix](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga61585db663d9da06b68e70cfbf6a1eac)
 - [Numpy Einstein Summation for Tensor-Matrix operations](https://numpy.org/doc/stable/reference/generated/numpy.einsum.html#numpy.einsum)
 ### Lab 4
-**TO BE UPDATED**
+- [Multi-view Stereo Lecture](https://youtu.be/OpZs7kfjFPA?si=wWt30zP4yenku_Kq)
+- [Median Filtering](https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.median_filter.html)
